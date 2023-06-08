@@ -18,7 +18,7 @@ function createExercise(req, res) {
 }
 
 function getExercise(req, res) {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, muscleGroup, muscle } = req.query;
 
   const options = {
     page: parseInt(page),
@@ -26,9 +26,21 @@ function getExercise(req, res) {
     sort: { created_at: "desc" },
   };
 
-  Exercise.paginate({}, options, (error, exerciseStored) => {
+  const query = {};
+
+  if (muscle) {
+    const muscleArray = muscle.split(",");
+    query.muscle = { $in: muscleArray };
+  }
+
+  if (muscleGroup) {
+    const muscleGroupArray = muscleGroup.split(",");
+    query.muscleGroup = { $in: muscleGroupArray };
+  }
+
+  Exercise.paginate(query, options, (error, exerciseStored) => {
     if (error) {
-      res.status(400).send({ msg: "Error al obtener los exercise" });
+      res.status(400).send({ msg: "Error al obtener los ejercicios" });
     } else {
       res.status(200).send(exerciseStored);
     }
@@ -79,28 +91,10 @@ function getOneExercise(req, res) {
   });
 }
 
-function getExerciseByMuscle(req, res) {
-  const { muscle } = req.params;
-
-  Exercise.find(
-    { muscle: { $regex: muscle, $options: "i" } },
-    (error, exerciseStored) => {
-      if (error) {
-        res.status(500).send({ msg: "Error del servidor" });
-      } else if (!exerciseStored || exerciseStored.length === 0) {
-        res.status(400).send({ msg: "No se ha encontrado ningun ejercicio" });
-      } else {
-        res.status(200).send(exerciseStored);
-      }
-    }
-  );
-}
-
 module.exports = {
   createExercise,
   getExercise,
   updateExercise,
   deleteExercise,
   getOneExercise,
-  getExerciseByMuscle,
 };

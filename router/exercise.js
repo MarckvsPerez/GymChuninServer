@@ -3,7 +3,7 @@ const ExerciseController = require("../controllers/exercise");
 const md_auth = require("../middlewares/authenticated");
 const multiparty = require("connect-multiparty");
 
-const md_upload = multiparty({ uploadDir: "./uploads/blog" });
+const md_upload = multiparty({ uploadDir: "./uploads/exercises" });
 const api = express.Router();
 
 api.post(
@@ -23,6 +23,5 @@ api.delete(
   ExerciseController.deleteExercise
 );
 api.get("/exercise/:path", ExerciseController.getOneExercise);
-api.get("/exercises/:muscle", ExerciseController.getExerciseByMuscle);
 
 module.exports = api;

@@ -6,6 +6,7 @@ const ExerciseSchema = mongoose.Schema({
   miniature: String,
   content: String,
   muscle: String,
+  muscleGroup: String,
   path: {
     type: String,
     unique: true,
