@@ -28,6 +28,12 @@ const UserSchema = mongoose.Schema({
   role: String,
   active: Boolean,
   avatar: String,
+  likedExercises: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "exercises",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", UserSchema);

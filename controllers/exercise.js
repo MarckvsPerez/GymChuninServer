@@ -1,4 +1,5 @@
 const Exercise = require("../models/exercise");
+const User = require("../models/user");
 const image = require("../utils/image");
 
 function createExercise(req, res) {
@@ -23,7 +24,7 @@ function getExercise(req, res) {
   const options = {
     page: parseInt(page),
     limit: parseInt(limit),
-    sort: { created_at: "desc" },
+    sort: { likedByUsers: "desc" },
   };
 
   const query = {};
@@ -65,16 +66,28 @@ function updateExercise(req, res) {
   });
 }
 
-function deleteExercise(req, res) {
+async function deleteExercise(req, res) {
   const { id } = req.params;
 
-  Exercise.findByIdAndDelete(id, (error) => {
-    if (error) {
-      res.status(400).send({ msg: "Error al eliminar el ejercicio" });
-    } else {
-      res.status(200).send({ msg: "exercise eliminado" });
+  try {
+    const deleteExercise = await Exercise.findByIdAndDelete(id);
+
+    if (!deleteExercise) {
+      return res.status(404).json({ error: "Ejercicio no encontrado" });
     }
-  });
+
+    await User.updateMany(
+      { likedExercises: id },
+      { $pull: { likedExercises: id } }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Ejercicio eliminado exitosamente" });
+  } catch (error) {
+    console.error("Error al eliminar el ejercicio:", error);
+    return res.status(500).json({ error: "Error al eliminar el ejercicio" });
+  }
 }
 
 function getOneExercise(req, res) {

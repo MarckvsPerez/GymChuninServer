@@ -1,4 +1,3 @@
-const menu = require("../models/menu");
 const Menu = require("../models/menu");
 
 async function createMenu(req, res) {

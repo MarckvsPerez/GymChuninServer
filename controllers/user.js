@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const Exercise = require("../models/exercise");
 const image = require("../utils/image");
 
 async function getMe(req, res) {
@@ -49,6 +50,7 @@ async function createUser(req, res) {
 
   user.save((error, userStored) => {
     if (error) {
+      console.log(error);
       res.status(400).send({ msg: "Error al crear el usuario" });
     } else {
       res.status(200).send(userStored);
@@ -85,13 +87,23 @@ async function updateUser(req, res) {
 async function deleteUser(req, res) {
   const { id } = req.params;
 
-  User.findByIdAndDelete(id, (error) => {
-    if (error) {
-      res.status(400).send({ msg: "Error al eliminar el usuario" });
-    } else {
-      res.status(200).send({ msg: "Usuario eliminado" });
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
-  });
+
+    await Exercise.updateMany(
+      { likedByUsers: id },
+      { $pull: { likedByUsers: id } }
+    );
+
+    return res.status(200).json({ message: "Usuario eliminado exitosamente" });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    return res.status(500).json({ error: "Error al eliminar usuario" });
+  }
 }
 
 module.exports = {

@@ -11,6 +11,12 @@ const ExerciseSchema = mongoose.Schema({
     type: String,
     unique: true,
   },
+  likedByUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+  ],
   created_at: Date,
 });
 

@@ -36,6 +36,7 @@ const userRoutes = require("./router/user");
 const menuRoutes = require("./router/menu");
 const exerciseRoutes = require("./router/exercise");
 const newsletterRoutes = require("./router/newsletter");
+const likesRouter = require("./router/likeexercise");
 
 /*----------  Configurar Body-Pasrer  ----------*/
 /**
@@ -107,6 +108,7 @@ app.use(`/api/${API_VERSION}`, userRoutes);
 app.use(`/api/${API_VERSION}`, menuRoutes);
 app.use(`/api/${API_VERSION}`, exerciseRoutes);
 app.use(`/api/${API_VERSION}`, newsletterRoutes);
+app.use(`/api/${API_VERSION}`, likesRouter);
 
 module.exports = app;
 /*----------  Exportar  ----------*/

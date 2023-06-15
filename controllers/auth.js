@@ -48,7 +48,7 @@ function register(req, res) {
     lastname,
     email: email.toLowerCase(),
     role: "user",
-    active: false,
+    active: true,
   });
 
   /*----------  Encriptacion password  ----------*/
@@ -82,6 +82,7 @@ function register(req, res) {
    */
   user.save((error, userStorage) => {
     if (error) {
+      console.log(error);
       res.status(400).send({ msg: "Error al crear el usuario" });
     } else {
       res.status(200).send(userStorage);
@@ -133,6 +134,8 @@ function login(req, res) {
   User.findOne({ email: emailLowerCase }, (error, userStore) => {
     if (error) {
       res.status(500).send({ msg: "Error del servidor" });
+    } else if (!userStore) {
+      res.status(400).send({ msg: "Usuario no encontrado" });
     } else {
       bcrypt.compare(password, userStore.password, (bcryptError, check) => {
         if (bcryptError) {
@@ -140,7 +143,7 @@ function login(req, res) {
         } else if (!check) {
           res.status(400).send({ msg: "Contraseña incorrecta" });
         } else if (!userStore.active) {
-          res.status(401).send({ msg: "El usuario no està autorizado" });
+          res.status(401).send({ msg: "Usuario no autorizado o no activo" });
         } else {
           res.status(200).send({
             access: jwt.createAccesToken(userStore),

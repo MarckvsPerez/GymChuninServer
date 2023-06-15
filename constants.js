@@ -26,7 +26,7 @@ const DB_PASSWORD = "admin123456";
 const DB_HOST = "gymchunin.dvqeujg.mongodb.net";
 
 const API_VERSION = "v1";
-const IP_SERVER = "localhost";
+const IP_SERVER = "192.168.1.128";
 
 const JWT_SECRET_KEY = "GASBDHJKGASDVASHJDVBASJ";
 
