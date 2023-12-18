@@ -22,11 +22,11 @@
  * elemento crítico en la implementación de dicha seguridad.
  */
 const DB_USER = "admin";
-const DB_PASSWORD = "admin123456";
+const DB_PASSWORD = "Pass123456";
 const DB_HOST = "gymchunin.dvqeujg.mongodb.net";
 
 const API_VERSION = "v1";
-const IP_SERVER = "192.168.1.128";
+const IP_SERVER = "localhost";
 
 const JWT_SECRET_KEY = "GASBDHJKGASDVASHJDVBASJ";
 
